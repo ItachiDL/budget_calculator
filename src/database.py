@@ -12,7 +12,7 @@ Version: 0.1
 import sqlite3
 from budget import Budget
 
-class BudgetDatabase:
+class Database:
     """
     A class to manage a budget database. It takes a sqlite3 connection object as input.
     """
@@ -83,14 +83,17 @@ class BudgetDatabase:
                                 (tax.get_category(), tax.get_amount(), tax.get_date(), tax.get_time(), tax.get_description()))
         self.__conn.commit()
 
-    def get_budgets(self):
+    def get_budget_by_id(self, id_number):
         """
-        Get all budget entries from the database.
+        Get a budget entries by the id from the database.
+
+        Args:
+            id_number (int): The id of the budget entry to get.
 
         Returns:
             list: A list of budget entries.
         """
-        self.__cursor.execute('SELECT * FROM budget')
+        self.__cursor.execute('SELECT * FROM budget WHERE id = ?', (id_number,))
         return self.__cursor.fetchall()
 
     def get_taxes(self):
@@ -113,17 +116,17 @@ class BudgetDatabase:
         self.__cursor.execute('DELETE FROM budget WHERE id = ?', (id,))
         self.__conn.commit()
 
-    def delete_tax(self, id):
+    def delete_tax(self, id_number):
         """
         Delete a tax entry from the database.
 
         Args:
             id (int): The id of the tax entry to delete.
         """
-        self.__cursor.execute('DELETE FROM taxes WHERE id = ?', (id,))
+        self.__cursor.execute('DELETE FROM taxes WHERE id = ?', (id_number,))
         self.__conn.commit()
 
-    def update_budget(self, id, budget):
+    def update_budget(self, id_number, budget):
         """
         Update a budget entry in the database.
 
@@ -132,7 +135,7 @@ class BudgetDatabase:
             budget (Budget): The new data for the budget entry.
         """
         # Check if the budget entry exists
-        self.__cursor.execute('SELECT * FROM budget WHERE id = ?', (id,))
+        self.__cursor.execute('SELECT * FROM budget WHERE id = ?', (id_number,))
         if not self.__cursor.fetchone():
             raise ValueError("Budget entry not found")
 
@@ -161,5 +164,16 @@ class BudgetDatabase:
                                 (tax.get_category(), tax.get_amount(), tax.get_date(), tax.get_time(), tax.get_description(), id))
         self.__conn.commit()
 
-        
+    def get_all_budgets(self):
+        """
+        Get all budget entries from the database.
+        :return:
+            All Budget entries in the database
+        """
+        self.__cursor.execute('SELECT * FROM budget')
+        return self.__cursor.fetchall()
+
+
+
+
 

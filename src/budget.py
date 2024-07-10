@@ -56,6 +56,17 @@ class Budget:
         # get the current date in format YYYY:MM:DD
         self.__date = datetime.now().strftime('%Y:%m:%d')
 
+    def set_date_database(self, date):
+        """
+        Set the date of the budget entry.
+        :param date: str the date of the budget entry in the format 'YYYY-MM-DD'
+        """
+        # Convert date string to datetime object
+        try:
+            self.__date = datetime.strptime(date, '%Y:%m:%d')
+        except ValueError:
+            raise ValueError('Incorrect date format, should be YYYY:MM:DD but is ' + date)
+
     def get_category(self):
         return self.__category
 
@@ -82,6 +93,17 @@ class Budget:
         """
         current_time = datetime.now().strftime('%H:%M:%S:%f')[:-3]
         self.__time = current_time
+
+    def set_time_database(self, time):
+        """
+        Set the time of the budget entry.
+        :param time: str the time of the budget entry in the format 'HH:MM:SS:mmm'
+        """
+        # Convert time string to datetime object
+        try:
+            self.__time = datetime.strptime(time, '%H:%M:%S:%f')
+        except ValueError:
+            raise ValueError('Incorrect time format, should be HH:MM:SS:mmm but is ' + time)
 
     def get_id(self):
         return self.__id
